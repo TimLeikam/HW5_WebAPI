@@ -1,0 +1,199 @@
+swagger: "2.0"
+info:
+  version: "0.0.1"
+  title: Homework 5 App
+# during dev, should point to your local machine
+host: localhost
+# basePath prefixes all resource paths 
+basePath: /
+# 
+schemes:
+  # tip: remove http to make production-grade
+  - http
+  - https
+# format of bodies a client can send (Content-Type)
+consumes:
+  - application/json
+# format of the responses to the client (Accepts)
+produces:
+  - application/json
+x-a127-config: {}
+x-a127-services: {}
+paths:
+  /hello:
+    # binds a127 app logic to a route
+    x-swagger-router-controller: hello_world
+    x-a127-apply: {}
+    get:
+      description: Returns 'Hello' to the caller
+      # used as the method name of the controller
+      operationId: hello
+      parameters:
+        - name: name
+          in: query
+          description: The name of the person to whom to say hello
+          required: false
+          type: string
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/HelloWorldResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /movies:
+    # binds a127 app logic to a route
+    x-swagger-router-controller: movies
+    x-a127-apply: {}
+    get:
+      description: Returns a list of movies with title, release date, and actors
+      # used as the method name of the controller
+      operationId: getMovies
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/HelloWorldResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    post:
+      description: Post a new movie to the database
+      operationId: postMovie
+      parameters:
+        - name: title
+          in: header
+          description: Title of the movie
+          required: true
+          type: string
+        - name: releaseDate
+          in: header
+          description: Release year of the movie
+          required: true
+          type: number
+        - name: a1
+          in: header
+          description: Actor(ess) in the film
+          required: true
+          type: string
+        - name: a2
+          in: header
+          description: Actor(ess) in the film
+          required: true
+          type: string
+        - name: a3
+          in: header
+          description: Actor(ess) in the film
+          required: true
+          type: string
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/HelloWorldResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /movies/{uuid}:
+    # binds a127 app logic to a route
+    x-swagger-router-controller: movies
+    x-a127-apply: {}
+    parameters:
+      - name: uuid
+        in: path
+        type: string
+    get:
+      description: Returns the movie with the uuid
+      # used as the method name of the controller
+      operationId: getMovieByUUID
+      parameters:
+        - name: reviews
+          in: query
+          description: returns the reviews for a movie
+          type: string
+          required: false
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/HelloWorldResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    delete:
+      operationId: deleteMovie
+      description: Remove a specific movie
+      responses:
+        "200":
+          description: Success
+        "404":
+          description: UUID not found
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /review/{uuid}:
+    # binds a127 app logic to a route
+    x-swagger-router-controller: movies
+    x-a127-apply: {}
+    post:
+      description: Post a new review for a movie in the database
+      operationId: postReview
+      parameters:
+        - name: uuid
+          in: path
+          description: UUID of the movie being reviewed
+          type: string
+        - name: author
+          in: header
+          description: Name of the reviewer
+          required: true
+          type: string
+        - name: body
+          in: header
+          description: The review itself
+          required: true
+          type: string
+        - name: rating
+          in: header
+          description: rating of the movie
+          required: true
+          type: number
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/HelloWorldResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+# complex objects have schema definitions
+definitions:
+  HelloWorldResponse:
+    required:
+      - message
+    properties:
+      message:
+        type: string
+  ErrorResponse:
+    required:
+      - message
+    properties:
+      message:
+        type: string
